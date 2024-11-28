@@ -8,7 +8,6 @@ import pandas as pd
 from io import StringIO
 
 UA = 'FindComps/1.3 csoto701@uchicago.edu'
-COMPS_LOCAL = pd.read_csv('comps.csv')
 
 def load_csv_from_s3(bucket_name, file_key):
     s3 = boto3.client('s3')
