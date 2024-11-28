@@ -3,9 +3,21 @@ from datetime import datetime
 from sklearn.neighbors import BallTree
 import numpy as np
 from geopy.geocoders import Nominatim
+import boto3
+import pandas as pd
+from io import StringIO
 
 UA = 'FindComps/1.3 csoto701@uchicago.edu'
 FLIPS = pd.read_csv('comps.csv')
+
+def load_csv_from_s3(bucket_name, file_key):
+    s3 = boto3.client('s3')
+    obj = s3.get_object(Bucket=bucket_name, Key=file_key)
+    data = obj['Body'].read().decode('utf-8')
+    df = pd.read_csv(StringIO(data))
+    return df
+
+FLIPS_amnz = load_csv_from_s3('amzn-s3-comps-csv','comps.csv')
 
 def common_elm_in_lists(lists):
     # Convert the first list to a set to use set operations
@@ -86,7 +98,7 @@ def makeTree(df):
     return BallTree(loc_radians, metric='haversine')
 
 # default is start_date=datetime.now().date() but for now will be dif
-def get_comps(address, df=FLIPS, start_date=datetime(2023,10,1).date(), radius=0.5, months=6, end_date=None,loc=None):
+def get_comps(address, df=FLIPS_amnz, start_date=datetime(2023,10,1).date(), radius=0.5, months=6, end_date=None,loc=None):
     """
     Returns a DataFrame of comps given loc and criteria  
 
@@ -126,3 +138,4 @@ def get_comps(address, df=FLIPS, start_date=datetime(2023,10,1).date(), radius=0
     comps = comps.sort_values(by='sale_price',ascending=False)
     comps = comps.reset_index(drop=True)
     return comps
+
