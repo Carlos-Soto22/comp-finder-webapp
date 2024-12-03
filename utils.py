@@ -16,7 +16,7 @@ def load_csv_from_s3(bucket_name, file_key):
     df = pd.read_csv(StringIO(data))
     return df
 
-COMPS_AMZN = load_csv_from_s3('amzn-s3-comps-csv','comps.csv')
+COMPS_AMZN = load_csv_from_s3('amzn-s3-comps-csv','comps-after-2023.csv')
 
 def common_elm_in_lists(lists):
     # Convert the first list to a set to use set operations
