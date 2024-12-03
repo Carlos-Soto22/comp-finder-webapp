@@ -1,6 +1,6 @@
 pandas
 datetime
-skicit-learn
+scikit-learn
 numpy
 geopy
 boto3
